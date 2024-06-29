@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <style>
+        .error {
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <input type="text" id="name" placeholder="Nom Client"/>
+    <select name="marque" id="marque">
+        <option value="">Choisir la marque</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Honda">Honda</option>
+        <option value="Ford">Ford</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="BMW">BMW</option>
+        <option value="Audi">Audi</option>
+        <option value="Mercedes-Benz">Mercedes-Benz</option>
+        <option value="Hyundai">Hyundai</option>
+    </select>
+    <select name="modele" id="modele">
+        <option value="">Choisir le modèle</option>
+    </select>
+    <input type="number" id="num" placeholder="Saisir le nombre de jours"/>
+    <button onclick="ajouter()">Ajouter</button>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Client</th>
+        <th>Marque</th>
+        <th>Modele</th>
+        <th>Nombre Jours</th>
+        <th>Prix par jour</th>
+        <th>Prix Total</th>
+    </tr>
+    </thead>
+    <tbody id="tb"></tbody>
+</table>
+<script>
+    const carData = [
+        {brand: "Toyota", model: "Camry", rentalPricePerDay: 45},
+        {brand: "Toyota", model: "Corolla", rentalPricePerDay: 40},
+        {brand: "Toyota", model: "Prius", rentalPricePerDay: 50},
+        {brand: "Honda", model: "Civic", rentalPricePerDay: 40},
+        {brand: "Honda", model: "Accord", rentalPricePerDay: 45},
+        {brand: "Honda", model: "Fit", rentalPricePerDay: 35},
+        {brand: "Ford", model: "Mustang", rentalPricePerDay: 75},
+        {brand: "Ford", model: "Focus", rentalPricePerDay: 35},
+        {brand: "Ford", model: "Fusion", rentalPricePerDay: 50},
+        {brand: "Chevrolet", model: "Malibu", rentalPricePerDay: 50},
+        {brand: "Chevrolet", model: "Impala", rentalPricePerDay: 55},
+        {brand: "Chevrolet", model: "Spark", rentalPricePerDay: 30},
+        {brand: "BMW", model: "3 Series", rentalPricePerDay: 120},
+        {brand: "BMW", model: "5 Series", rentalPricePerDay: 150},
+        {brand: "BMW", model: "X3", rentalPricePerDay: 130},
+        {brand: "Audi", model: "A4", rentalPricePerDay: 130},
+        {brand: "Audi", model: "A6", rentalPricePerDay: 160},
+        {brand: "Audi", model: "Q5", rentalPricePerDay: 140},
+        {brand: "Mercedes-Benz", model: "C-Class", rentalPricePerDay: 150},
+        {brand: "Mercedes-Benz", model: "E-Class", rentalPricePerDay: 180},
+        {brand: "Mercedes-Benz", model: "GLA", rentalPricePerDay: 160},
+        {brand: "Hyundai", model: "Elantra", rentalPricePerDay: 35},
+        {brand: "Hyundai", model: "Sonata", rentalPricePerDay: 40},
+        {brand: "Hyundai", model: "Tucson", rentalPricePerDay: 50},
+    ];
+
+    document.getElementById('marque').addEventListener('change', function () {
+        const marque = this.value;
+        const modeleSelect = document.getElementById('modele');
+        modeleSelect.innerHTML = '<option value="">Choisir le modèle</option>';
+        const models = carData.filter(car => car.brand === marque);
+        models.forEach(car => {
+            const option = document.createElement('option');
+            option.value = car.model;
+            option.textContent = car.model;
+            modeleSelect.appendChild(option);
+        });
+    });
+
+    function ajouter() {
+        const name = document.getElementById('name').value;
+        const marque = document.getElementById('marque').value;
+        const modele = document.getElementById('modele').value;
+        const num = parseInt(document.getElementById('num').value);
+        const tb = document.getElementById('tb');
+
+        if (!name || !marque || !modele || !num) {
+            ['name', 'marque', 'modele', 'num'].forEach(id => {
+                const element = document.getElementById(id);
+                element.classList.add('error');
+            });
+            return;
+        }
+
+        ['name', 'marque', 'modele', 'num'].forEach(id => {
+            const element = document.getElementById(id);
+            element.classList.remove('error');
+        });
+
+        const car = carData.find(car => car.brand === marque && car.model === modele);
+        const prixParJour = car.rentalPricePerDay;
+        const prixTotal = prixParJour * num;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${name}</td>
+            <td>${marque}</td>
+            <td>${modele}</td>
+            <td>${num}</td>
+            <td>${prixParJour}</td>
+            <td>${prixTotal}</td>
+        `;
+        tb.appendChild(row);
+    }
+</script>
+</body>
+</html>
